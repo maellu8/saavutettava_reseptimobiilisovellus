@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Button, TextInput, Alert, ScrollView, Image, Dimensions } from 'react-native';
+import { StyleSheet, Text, View, Button, TextInput, Alert, ScrollView, Image, Dimensions, FlatList } from 'react-native';
 import { Card, Icon } from 'react-native-elements';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { FontAwesome } from '@expo/vector-icons';
 import Carousel from 'react-native-new-snap-carousel';
 import Ohje from './data';
+//import { API_URL, API_TOKEN } from '@env';
 
 //import { Card } from '@rneui/themed';
 
@@ -13,16 +14,47 @@ import Ohje from './data';
 
 export default function Etusivu({ navigation }) {
   const [text, setText] = useState('');
+  const [name, setName] = useState('');
   const buttonPressed = () => {
     Alert.alert(text);
   };
+
+  useEffect(() => {  
+  const url = 'https://tasty.p.rapidapi.com/recipes/list?from=0&size=20&tags=under_30_minutes';
   
-  //TESTAAMATON!
-   const { width:screenWidth } = Dimensions.get('window');
-   const sliderWidth = screenWidth;
-   const itemWidth = screenWidth * 0.6;
+  }
+  );
+
+  async function list() {
+    const url = 'https://tasty.p.rapidapi.com/recipes/list?from=0&size=20&tags=under_30_minutes';
+    const options = {
+      method: 'GET',
+      headers: {
+        'X-RapidAPI-Key': process.env.API_TOKEN,
+        'X-RapidAPI-Host': process.env.API_URL
+      }
+    };
+
+    try {
+      const response = await fetch(url, options);
+      const result = await response.json();
+ //     console.log(result);
+      const res = result.results[13].name;
+      const des = result.results[13].description;
+ //     console.log(res);
+ //     console.log(des);
+      setName(res);
+      setText(des);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+  list();
   
-   //TESTAAMATON!
+  const { width:screenWidth } = Dimensions.get('window');
+  const sliderWidth = screenWidth;
+  const itemWidth = screenWidth * 0.6;
+  
    const renderItem = ({item}) => (
     <View style={styles.itemContainer}>
       <Text style={styles.name}>{item.name}</Text>
@@ -49,6 +81,9 @@ export default function Etusivu({ navigation }) {
       <Button title="Tietoihin"
         onPress={() => navigation.navigate('Tiedot')}
       />
+      <View>
+          <Text> </Text>
+      </View>
       <Carousel
         Layout='default'
         data={Ohje}
@@ -75,10 +110,10 @@ export default function Etusivu({ navigation }) {
       </Card>
       <Card title='Ohje'>
         <Text style={styles.name}>
-          Kinkkupiirakka
+          {name}
         </Text>
         <Text style={{marginBottom: 10}}>
-          Suussasulava juusto päällinen kruunaa peruspiirakan
+          {text}
         </Text>
         <Button
           icon={<Icon name='code' color='#ffffff' />}
