@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Button, TextInput, Alert, ScrollView, Image, Dimensions, FlatList } from 'react-native';
+import { StyleSheet, Text, View, Button, TextInput, Alert, ScrollView, Image, Dimensions, FlatList, Pressable } from 'react-native';
 import { Card, Icon } from 'react-native-elements';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { FontAwesome } from '@expo/vector-icons';
@@ -15,17 +15,37 @@ import Ohje from './data';
 export default function Etusivu({ navigation }) {
   const [text, setText] = useState('');
   const [name, setName] = useState('');
+  const [list, setList] = useState('');
+  const [hakusana, setHakusana] = useState(''); //onko tarpeen? text ok käyttää?
+
   const buttonPressed = () => {
     Alert.alert(text);
   };
 
-  useEffect(() => {  
-  const url = 'https://tasty.p.rapidapi.com/recipes/list?from=0&size=20&tags=under_30_minutes';
-  
+  //'https://tasty-co.p.rapidapi.com/recipes/search?query=banana'
+  // Haku testaamatta
+// apin tauko käyttörajan ylitys
+  const getList = () => {
+    fetch(`https://tasty-co.p.rapidapi.com/recipes/search?query=${text}`)
+    .then(response => response.json())
+    .then(responseJson => setList(responseJson.results))
+    .catch(error => {
+      Alert.alert('Error', error);
+    });
   }
-  );
 
-  async function list() {
+  const listSeparator = () => {
+    return (
+      <View style={{
+        height: 1,
+        width:"80%",
+        marginLeft:"10%"
+      }}
+      />
+      );
+    };
+// apin tauko käyttörajan ylitys
+  async function alle30min() {
     const url = 'https://tasty.p.rapidapi.com/recipes/list?from=0&size=20&tags=under_30_minutes';
     const options = {
       method: 'GET',
@@ -38,18 +58,18 @@ export default function Etusivu({ navigation }) {
     try {
       const response = await fetch(url, options);
       const result = await response.json();
- //     console.log(result);
-      const res = result.results[13].name;
-      const des = result.results[13].description;
- //     console.log(res);
- //     console.log(des);
+      console.log(result);
+      const res = result.results[0].name;
+      const des = result.results[0].description;
+      console.log(res);
+      console.log(des);
       setName(res);
       setText(des);
     } catch (error) {
       console.error(error);
     }
   }
-  list();
+  alle30min();
   
   const { width:screenWidth } = Dimensions.get('window');
   const sliderWidth = screenWidth;
@@ -65,7 +85,7 @@ export default function Etusivu({ navigation }) {
         title='VIEW NOW' />
     </View>
    )
-
+//getList() poistettu api-syistä Etsi-buttonista ja search-iconista onPress= {getList}
   return (
     <SafeAreaProvider style={styles.container}>
       <ScrollView style={styles.scrollView}>
@@ -74,7 +94,21 @@ export default function Etusivu({ navigation }) {
         <TextInput style={{flex: 1}}
           placeholder={'Hae resepti'}
           onChangeText={text => setText(text)} value={text} />
-      </View>
+      </View>   
+      <Button title="Etsi" onPress= {() => navigation.navigate('Tiedot')}
+      />
+      <FlatList
+        style={{marginLeft: "5%"}}
+        keyExtractor={(item, index) => index}
+        renderItem={({item}) =>
+        <View style={styles.view}>
+          <Text style={Headers}>{item.name}</Text>
+          <Image source={{ uri: item.thumbnail_url}} style={{width:"80%", height:100}} />
+        </View>
+        }
+        data={list}
+        ItemSeparatorComponent={listSeparator} />
+
       <Text>New project, here we come</Text>
       <Text>Kirjoita jotain</Text>
       <Button onPress={buttonPressed} title='Press me' />
@@ -91,16 +125,30 @@ export default function Etusivu({ navigation }) {
         sliderWidth={sliderWidth}
         itemWidth={itemWidth}
       />
+      <Pressable
+        onPress={() => navigation.navigate('Tiedot')
+        }
+        style={({pressed}) => [
+          {
+            backgroundColor: pressed ? 'rgb(210, 230, 255)' : 'white',
+          },
+          styles.wrapperCustom,
+        ]}>
+          <Card title='Ohje' style={styles.card}>
+            <Text style={styles.name}>
+              Banaanileipä
+            </Text>
+            <Text style={{marginBottom: 10}}>
+              herkku
+            </Text>
+          </Card>
+      </Pressable>
+
       <Card title='Ohje'>
         {
           Ohje.map((u, i) => {
             return (
               <View key={i} style={styles.hyvaa}>
-                <Image
-                  style={styles.image}
-                  resizeMode="cover"
-                //  source={{ uri: u.avatar }}
-                />
                 <Text style={styles.name}>{u.name}</Text>
                 <Text style={styles.text}>{u.text}</Text>
               </View>

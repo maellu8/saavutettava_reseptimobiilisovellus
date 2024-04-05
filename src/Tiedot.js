@@ -1,12 +1,22 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Button } from 'react-native';
-// reseptin tiedot
+import { StyleSheet, Text, View, Button, Image } from 'react-native';
+
+// reseptin tiedot parametrinä
 
 export default function Tiedot({ navigation }) {
+  const [item, setItem] = useState(''); //testiin
+
   return (
     <View style={styles.container}>
-      <Text>Tähän tulee reseptin tiedot</Text>
+      <Text>Kuva annoksesta</Text>
+      <Image source={{ uri: item.thumbnail_url}} style={{width:"80%", height:100}} />
+      <Text style={styles.name}>{item.name}</Text>
+      <Text style={styles.text}>{item.description}</Text>
+      <Text style={styles.text}>{item} valmistusaika jos tarvii</Text>
+      <Text style={styles.text}>{item} mittayksiköt ja ainesosat</Text>
+      <Text>Ohje</Text>
+      <Text style={styles.name}>{item} Sanallinen ohje</Text>
       <Button title="Etusivulle"
         onPress={() => navigation.navigate('Etusivu')}
       />
