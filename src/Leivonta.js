@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Button, FlatList, ScrollView, Image } from 'react-native';
+import { StyleSheet, Text, View, FlatList, ScrollView, Image, Pressable } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Card } from 'react-native-elements';
 
@@ -12,7 +12,7 @@ export default function Leivonta({ navigation }) {
   const [list, setList] = useState([]);
 
 //Tagina desserts, antaa 20 tulosta
-/* apin tauko
+
   async function fetchDes() {
     const url = 'https://tasty.p.rapidapi.com/recipes/list?from=0&size=20&tags=desserts';
     const options = {
@@ -28,14 +28,14 @@ export default function Leivonta({ navigation }) {
       const result = await response.json();
       setList(result.results);
       console.log("leivonta " + list);
-      //testiversiossa:
+      /*testiversiossa:
       const res = result.results[13].name;
       const des = result.results[13].description;
       console.log("Leivonta: " + res);
       console.log("Leivonta: " + des);
       setName(res);
       setText(des);
-      //
+      */
     } catch (error) {
       console.error(error);
     }
@@ -45,7 +45,7 @@ export default function Leivonta({ navigation }) {
     fetchDes();
     console.log(list);
    }, []);
-*/ 
+ 
   const listSeparator = () => {
     return (
       <View style={{
@@ -60,24 +60,21 @@ export default function Leivonta({ navigation }) {
   return (
     <SafeAreaProvider style={styles.container}>
       <ScrollView style={styles.scrollView}>
-      <View style={styles.container}>
-          <Text>Leipaistaan</Text>
-          <StatusBar style="auto" />
-          <Button title="Tietoihin"
-            onPress={() => navigation.navigate('Tiedot')}
-          />
-      </View>
+      <View style={styles.view}>
         <FlatList
-           style={{marginLeft: "5%"}}
            keyExtractor={(item, index) => index}
            renderItem={({item}) =>
-           <Card title='Dinner' style={styles.view}>
-             <Image source={{ uri: item.thumbnail_url}} style={{width:"80%", height:100}} />
-             <Text style={styles.name}>{item.name}</Text>
+           <Card title='Dinner' style={styles.itemContainer}>
+              <Pressable  onPress={() => navigation.navigate('Tiedot')}>
+                <Image source={{ uri: item.thumbnail_url}} style={{width:"100%", height:100}} />
+                <Text style={styles.name}>{item.name}</Text>
+              </Pressable>
            </Card>
            }
            data={list}
-           ItemSeparatorComponent={listSeparator} />
+           ItemSeparatorComponent={listSeparator}
+        />
+      </View>
       </ScrollView>
     </SafeAreaProvider>
   );
@@ -86,12 +83,20 @@ export default function Leivonta({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: '#dfe9e2',
   },
   scrollView: {
     marginHorizontal: 20,
+    marginBottom: 20,
+    marginTop:10,
+  },
+  view: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#dfe9e2',
   },
   text: {
     fontSize: 16,
@@ -101,7 +106,8 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     paddingHorizontal: 8,
-    marginBottom: 5,
+    marginBottom: 3,
+    marginTop:5,
   },
   itemContainer: {
     marginTop: 20,

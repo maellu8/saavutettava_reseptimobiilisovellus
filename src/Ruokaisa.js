@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Button, FlatList, ScrollView, Image } from 'react-native';
+import { StyleSheet, Text, View, FlatList, ScrollView, Image, Pressable } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Card } from 'react-native-elements';
 
@@ -29,14 +29,14 @@ export default function Ruokaisa({ navigation }) {
       const result = await response.json();
       setList(result.results);
       console.log("ruokaisa " + list);
-      //testiversiossa:
+      /*testiversiossa:
       const res = result.results[13].name;
       const des = result.results[13].description;
       console.log("Ruokaisa: " + res);
       console.log("Ruokaisa: " + des);
       setName(res);
       setText(des);
-      //
+      */
     } catch (error) {
       console.error(error);
     }
@@ -62,23 +62,19 @@ export default function Ruokaisa({ navigation }) {
     <SafeAreaProvider style={styles.container}>
       <ScrollView style={styles.scrollView}>
         <View style={styles.container}>
-          <Text>Ruokaohjetta pukkaa</Text>
-          <StatusBar style="auto" />
-          <Button title="Tietoihin"
-            onPress={() => navigation.navigate('Tiedot')}
-          />
-        </View>
           <FlatList
-            style={{marginLeft: "5%"}}
             keyExtractor={(item, index) => index}
             renderItem={({item}) =>
             <Card title='Dinner' style={styles.view}>
-              <Image source={{ uri: item.thumbnail_url}} style={{width:"80%", height:100}} />
-              <Text style={styles.name}>{item.name}</Text>
+              <Pressable  onPress={() => navigation.navigate('Tiedot')}>
+                <Image source={{ uri: item.thumbnail_url}} style={styles.image} />
+                <Text style={styles.name}>{item.name}</Text>
+              </Pressable>
             </Card>
             }
             data={list}
             ItemSeparatorComponent={listSeparator} />
+        </View>
       </ScrollView>
     </SafeAreaProvider>
   );
@@ -90,9 +86,18 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: '#dfe9e2',
   },
   scrollView: {
     marginHorizontal: 20,
+    marginBottom: 20,
+    marginTop:10,
+  },
+  image: {
+    width:"100%",
+    height:100,
+    resizeMode:"cover",
+    padding:0,
   },
   text: {
     fontSize: 16,
@@ -102,7 +107,8 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     paddingHorizontal: 8,
-    marginBottom: 5,
+    marginBottom: 3,
+    marginTop: 5,
   },
   itemContainer: {
     marginTop: 20,

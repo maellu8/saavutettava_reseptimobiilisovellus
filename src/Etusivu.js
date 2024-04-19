@@ -1,38 +1,28 @@
 import React, { useState, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Button, TextInput, Alert, ScrollView, Image, Dimensions, FlatList, Pressable } from 'react-native';
+import { StyleSheet, Text, View, TextInput, Alert, ScrollView, Image, Dimensions, FlatList, Pressable } from 'react-native';
 import { Card, Icon } from 'react-native-elements';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { FontAwesome } from '@expo/vector-icons';
 import Carousel from 'react-native-new-snap-carousel';
-import Ohje from './data';
-//import { API_URL, API_TOKEN } from '@env';
+import Ohje from './data'; //testii
 
-//import { Card } from '@rneui/themed';
-
-// etusivu, haku
-
+// etusivu
 export default function Etusivu({ navigation }) {
-  const [text, setText] = useState('');
-  const [name, setName] = useState('');
-  const [list, setList] = useState('');
-  const [hakusana, setHakusana] = useState(''); //onko tarpeen? text ok käyttää?
+  const [text, setText] = useState(''); //testissä
+  const [name, setName] = useState(''); //testissä
+  const [quickList, setQuickList] = useState([]);
+  const [springList, setSpringList] = useState([]);
+  const [difficultList, setDifficultList] = useState([]);
+  
+  // karusellin kokomääritykset
+  const { width:screenWidth } = Dimensions.get('window');
+  const sliderWidth = screenWidth;
+  const itemWidth = screenWidth * 0.6;
 
   const buttonPressed = () => {
     Alert.alert(text);
   };
-
-  //'https://tasty-co.p.rapidapi.com/recipes/search?query=banana'
-  // Haku testaamatta
-// apin tauko käyttörajan ylitys
-  const getList = () => {
-    fetch(`https://tasty-co.p.rapidapi.com/recipes/search?query=${text}`)
-    .then(response => response.json())
-    .then(responseJson => setList(responseJson.results))
-    .catch(error => {
-      Alert.alert('Error', error);
-    });
-  }
 
   const listSeparator = () => {
     return (
@@ -44,8 +34,9 @@ export default function Etusivu({ navigation }) {
       />
       );
     };
-// apin tauko käyttörajan ylitys
-  async function alle30min() {
+
+// listaa reseptit, joiden valmistusaika on alle 30 min
+ async function quick() {
     const url = 'https://tasty.p.rapidapi.com/recipes/list?from=0&size=20&tags=under_30_minutes';
     const options = {
       method: 'GET',
@@ -58,125 +49,198 @@ export default function Etusivu({ navigation }) {
     try {
       const response = await fetch(url, options);
       const result = await response.json();
-      console.log(result);
-      const res = result.results[0].name;
+      setQuickList(result.results);
+      console.log("quick " + quickList);
+   /*   const res = result.results[0].name;
       const des = result.results[0].description;
       console.log(res);
       console.log(des);
       setName(res);
-      setText(des);
+      setText(des);*/
     } catch (error) {
       console.error(error);
     }
   }
-  alle30min();
+
+  // listaa kevätkauden reseptit
+  async function spring() {
+    const url = 'https://tasty.p.rapidapi.com/recipes/list?from=0&size=20&tags=spring';
+    const options = {
+      method: 'GET',
+      headers: {
+        'X-RapidAPI-Key': process.env.API_TOKEN,
+        'X-RapidAPI-Host': process.env.API_URL
+      }
+    };
+
+    try {
+      const response = await fetch(url, options);
+      const result = await response.json();
+      setSpringList(result.results);
+      console.log("spring " + springList);
+   /*   const res = result.results[0].name;
+      const des = result.results[0].description;
+      console.log(res);
+      console.log(des);
+      setName(res);
+      setText(des);*/
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+// listaa reseptit, joiden valmistusaika on alle 1 tunti
+  async function difficult() {
+    const url = 'https://tasty.p.rapidapi.com/recipes/list?from=0&size=20&tags=under_1_hour';
+    const options = {
+      method: 'GET',
+      headers: {
+        'X-RapidAPI-Key': process.env.API_TOKEN,
+        'X-RapidAPI-Host': process.env.API_URL
+      }
+    };
+
+    try {
+      const response = await fetch(url, options);
+      const result = await response.json();
+      setDifficultList(result.results);
+      console.log("difficulty " + difficultList);
+   /*   const res = result.results[0].name;
+      const des = result.results[0].description;
+      console.log(res);
+      console.log(des);
+      setName(res);
+      setText(des);*/
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+ useEffect(() => {
+  quick();
+  console.log(quickList);
+ }, []);
+
+ useEffect(() => {
+  spring();
+  console.log(springList);
+ }, []);
+
+ useEffect(() => {
+  difficult();
+  console.log(difficultList);
+ }, []);
   
-  const { width:screenWidth } = Dimensions.get('window');
-  const sliderWidth = screenWidth;
-  const itemWidth = screenWidth * 0.6;
-  
+  // rendelöi karusellin sisällön, kuva ja teksti on painike
    const renderItem = ({item}) => (
-    <View style={styles.itemContainer}>
-      <Text style={styles.name}>{item.name}</Text>
-      <Text style={styles.text}>{item.text}</Text>
-      <Button
-        icon={<Icon name='code' color='#ffffff' />}
-        buttonStyle={{borderRadius: 0, marginLeft: 0, marginRight: 0, marginBottom: 0}}
-        title='VIEW NOW' />
-    </View>
+    <Pressable style={styles.itemContainer}
+      accessible={true}
+      accessibilityRole="imagebutton"
+      accessibilityLabel="Tap the button"
+      accessibilityHint="Navigates to recipe's details"
+      onPress={() => 
+        navigation.navigate('Tiedot', {item})
+        }
+    >
+      <Image source={{ uri: item.thumbnail_url}} style={{width:itemWidth, height:100, borderRadius: 8}} />
+      <Text style={styles.name} accessibilityRole="text">{item.name}</Text>
+    </Pressable>
    )
-//getList() poistettu api-syistä Etsi-buttonista ja search-iconista onPress= {getList}
+
+// haku on vain painike, vie hakusivun toiminnallisuuteen. Haku on stabiili
+// reseptikaruselli x2, korttia napauttamalla pääsee reseptien tietoihin
+// korttilistaus vertikaalisesti, korttia napauttamalla pääsee reseptien tietoihin
   return (
     <SafeAreaProvider style={styles.container}>
-      <ScrollView style={styles.scrollView}>
-      <View style={styles.searchBox}>
-        <FontAwesome name="search" size={24} color="black" style={styles.searchIcon} />
-        <TextInput style={{flex: 1}}
-          placeholder={'Hae resepti'}
-          onChangeText={text => setText(text)} value={text} />
-      </View>   
-      <Button title="Etsi" onPress= {() => navigation.navigate('Tiedot')}
-      />
-      <FlatList
-        style={{marginLeft: "5%"}}
-        keyExtractor={(item, index) => index}
-        renderItem={({item}) =>
-        <View style={styles.view}>
-          <Text style={Headers}>{item.name}</Text>
-          <Image source={{ uri: item.thumbnail_url}} style={{width:"80%", height:100}} />
-        </View>
+      <Pressable style={styles.searchBox}
+        accessible={true}
+        accessibilityRole="button"
+        accessibilityLabel="Tap"
+        accessibilityHint='Navigate to search screen'
+        onPress={() => navigation.navigate('Ohje')
         }
-        data={list}
-        ItemSeparatorComponent={listSeparator} />
-
-      <Text>New project, here we come</Text>
-      <Text>Kirjoita jotain</Text>
-      <Button onPress={buttonPressed} title='Press me' />
-      <Button title="Tietoihin"
-        onPress={() => navigation.navigate('Tiedot')}
-      />
-      <View>
-          <Text> </Text>
-      </View>
-      <Carousel
-        Layout='default'
-        data={Ohje}
-        renderItem={renderItem}
-        sliderWidth={sliderWidth}
-        itemWidth={itemWidth}
-      />
-      <Pressable
-        onPress={() => navigation.navigate('Tiedot')
-        }
-        style={({pressed}) => [
-          {
-            backgroundColor: pressed ? 'rgb(210, 230, 255)' : 'white',
-          },
-          styles.wrapperCustom,
-        ]}>
-          <Card title='Ohje' style={styles.card}>
-            <Text style={styles.name}>
-              Banaanileipä
-            </Text>
-            <Text style={{marginBottom: 10}}>
-              herkku
-            </Text>
-          </Card>
+      >
+        <FontAwesome name="search" size={25} color="black" style={styles.searchIcon} />
+        <TextInput style={styles.textInput}
+          placeholder={'Search recipe'}
+        />
       </Pressable>
-
-      <Card title='Ohje'>
-        {
-          Ohje.map((u, i) => {
-            return (
-              <View key={i} style={styles.hyvaa}>
-                <Text style={styles.name}>{u.name}</Text>
-                <Text style={styles.text}>{u.text}</Text>
-              </View>
-            );
-          })
-        }
-      </Card>
-      <Card title='Ohje'>
-        <Text style={styles.name}>
-          {name}
-        </Text>
-        <Text style={{marginBottom: 10}}>
-          {text}
-        </Text>
-        <Button
-          icon={<Icon name='code' color='#ffffff' />}
-          buttonStyle={{borderRadius: 0, marginLeft: 0, marginRight: 0, marginBottom: 0}}
-          title='VIEW NOW' />
-      </Card>
-      <Text style={styles.text}>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-          aliquip ex ea commodo consequat. Duis aute irure dolor in
-          reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-          pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-          culpa qui officia deserunt mollit anim id est laborum.
-        </Text>
+      <ScrollView style={styles.scrollView}
+        accessible={true}
+        accessibilityRole="grid"
+        accessibilityLabel='Scroll vertical'
+        accessibilityHint='Scroll the view to the top reviewing whole content'
+      >
+        <View style={styles.carousel}
+          accessible={true}>
+          <Text style={styles.name}
+            accessible={true}
+            accessibilityRole='text'>
+            Quick Recipes</Text>
+          <Carousel
+            accessible={true}
+            accessibilityLabel="Carousel"
+            accessibilityHint="Scroll to the left to see recipies and back to the right"
+            accessibilityRole="adjustable"
+            showsHorizontalScrollIndicator={true}
+            Layout='default'
+            data={quickList}
+            renderItem={renderItem}
+            sliderWidth={sliderWidth}
+            itemWidth={itemWidth}
+          />
+        </View>
+        <View style={styles.carousel} accessible={true}>
+          <Text style={styles.name}
+            accessible={true}
+            accessibilityRole='text'>
+            Spring Recipes</Text>
+          <Carousel
+            accessible={true}
+            accessibilityLabel="Carousel"
+            accessibilityHint="Scroll to the left to see recipies and back to the right"
+            accessibilityRole="adjustable"
+            showsHorizontalScrollIndicator={true}
+            Layout='default'
+            data={springList}
+            renderItem={renderItem}
+            sliderWidth={sliderWidth}
+            itemWidth={itemWidth}
+          />
+        </View>
+        <View style={styles.carousel} accessible={true}>
+          <Text style={styles.name}
+            accessible={true}
+            accessibilityRole='text'>
+            Take Your Time Recipes
+          </Text>
+          <View style={styles.flatlist}>
+          <FlatList
+            accessible={true}
+            accessibilityRole='grid'
+            accessibilityLabel="List"
+            accessibilityHint="Scroll vertically to review recipies"
+            data={difficultList}
+            keyExtractor={(item, index) => index}
+            renderItem={({item}) => (
+              <Card style={styles.view}>
+              <Pressable
+                accessible={true}
+                accessibilityRole="imagebutton"
+                accessibilityLabel='Tap'
+                accessibilityHint='Navigate to recipe details'
+                onPress={() => navigation.navigate('Tiedot', {item})
+                }
+              >
+                <Image source={{ uri: item.thumbnail_url}} style={{width:"100%", height:100}} />
+                <Text style={styles.name} accessibilityRole="text">{item.name}</Text>
+              </Pressable>
+              </Card>
+             )}
+             ItemSeparatorComponent={listSeparator}
+          />
+          </View>
+        </View>
       </ScrollView>
       <StatusBar style="auto" />
     </SafeAreaProvider>
@@ -187,9 +251,9 @@ export default function Etusivu({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: '#dfe9e2',
   },
   searchBox: {
     flexDirection: 'row',
@@ -198,46 +262,72 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderWidth: 0.5,
     borderColor: '#000',
-    height: 40,
+    height: 45,
     borderRadius: 5,
     margin: 10,
     width: '80%',
   },
+  textInput: {
+    flex: 1,
+    fontSize: 18,
+  },
   searchIcon: {
     margin: 5,
+    marginLeft: 10,
+    marginRight: 20,
     height: 25,
     width: 25,
     alignItems: 'center',
   },
   scrollView: {
-    marginHorizontal: 20,
+    marginHorizontal: 10,
+    marginBottom: 20,
+    marginTop:10,
+  },
+  view: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#dfe9e2',
   },
   text: {
     fontSize: 16,
     marginBottom: 10,
   },
   name: {
-    fontSize: 18,
+    fontSize: 15,
     fontWeight: 'bold',
     paddingHorizontal: 8,
-    marginBottom: 5,
+    marginBottom: 3,
+    marginTop:5,
   },
   itemContainer: {
-    marginTop: 20,
-    backgroundColor: '#7a82e5',
-    borderRadius: 10,
-    padding: 20,
+    marginTop: 10,
+    backgroundColor: 'white',
+    borderRadius: 8,
+    borderColor: '#000', // eit oimi
+    padding: 10, // ei nähtävästi vaikuta
     alignItems: 'center',
     justifyContent: 'center',
     height: 150,
   },
   card: {
-    borderRadius: 10,
-    marginVertical: 12,
-    marginHorizontal: 16,
-    borderColor: '#000',
-    alignItems: 'stretch',
-    height: 360,
-    width:350,
-  }
+    marginTop: 10,
+    marginLeft: 20,
+    backgroundColor: 'white',
+    borderRadius: 8,
+    borderColor: '#000', // eit oimi
+    padding: 10, // ei nähtävästi vaikuta
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 100,
+    width:'80%',
+  },
+  flatlist: {
+    marginBottom:40,
+    marginRight:20,
+  },
+  carousel: {
+    marginTop: 15,
+  },
 });
