@@ -11,7 +11,7 @@ import Etusivu from './src/Etusivu';
 import Tiedot from './src/Tiedot';
 import Ruokaisa from './src/Ruokaisa';
 import Leivonta from './src/Leivonta';
-import Haku from './src/haku';
+import Haku from './src/Haku';
 //import cupcakeFlower from './images';
 
 // Yhdistetty Stack- ja Tab-navigaatio
@@ -19,14 +19,18 @@ import Haku from './src/haku';
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
+const activeTintLabelColor = '#a4d7af';
+const inactiveTintLabelColor = '#808080';
+
 export default function StackNavigation() {
   return (
     <SafeAreaProvider>
       <NavigationContainer>
-        <Tab.Navigator>
+        <Tab.Navigator tabBarOptions={{ activeTintColor: "#a4d7af",
+          labelStyle: { fontSize: 15, fontWeight: "bold", }}}>
           <Tab.Screen name="Koti"
-            options={{ headerShown: false, title: 'Home', backgroundColor: '#f0e6d5',
-              tabBarIcon:() => ( <Entypo name="home" size={35}/> ) }}
+            options={{ headerShown: false, title: 'Home',
+              tabBarIcon:({focused}) => ( <Entypo name="home" size={28} color={focused ? activeTintLabelColor : inactiveTintLabelColor} /> ) }}
             accessible={true}
             accessibilityLabel="Tap"
             accessibilityHint="Navigate to home page"
@@ -41,11 +45,6 @@ export default function StackNavigation() {
                   title: 'Recipe Book',
                   headerTitleAlign: 'center',
                   headerStyle: {backgroundColor: '#c8dace'},
-              /*    headerLeft: () => (
-                    <Image source={require('./images/cupcakeFlower.png')}
-                    style={{width: 100, height: 80}}
-                     /> 
-                    )*/
                 }}
                 accessible={true}
                 accessibilityLabel="This is header"
@@ -69,16 +68,18 @@ export default function StackNavigation() {
             )}
           </Tab.Screen>
           <Tab.Screen name="Ruokaisa" component={Ruokaisa}
-            options={{ title: 'Cooking', tabBarIcon:() =>
-              ( <MaterialCommunityIcons name="silverware-fork-knife" size={35} /> ), headerTitleAlign: 'center', headerStyle: {backgroundColor: '#c8dace'}  }}
+            options={{ title: 'Cooking',
+              tabBarIcon:({focused}) =>
+              ( <MaterialCommunityIcons name="silverware-fork-knife" size={28} color={focused ? activeTintLabelColor : inactiveTintLabelColor} /> ), headerTitleAlign: 'center', headerStyle: {backgroundColor: '#c8dace'}  }}
             accessible={true}
             accessibilityLabel="Tap"
             accessibilityHint="Navigate to review Cooking reciepes"
             accessibilityRole="button"
             />
           <Tab.Screen name="Leivonta" component={Leivonta}
-            options={{ title: 'Baking', tabBarIcon:() =>
-              ( <MaterialCommunityIcons name="cupcake" size={38} /> ), headerTitleAlign: 'center', headerStyle: {backgroundColor: '#c8dace'}  }}
+            options={{ title: 'Baking',
+              tabBarIcon:({focused}) =>
+              ( <MaterialCommunityIcons name="cupcake" size={28} color={focused ? activeTintLabelColor : inactiveTintLabelColor} /> ), headerTitleAlign: 'center', headerStyle: {backgroundColor: '#c8dace'}  }}
             accessible={true}
             accessibilityLabel="Tap"
             accessibilityHint="Navigate to review Baking reciepes"
