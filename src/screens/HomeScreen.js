@@ -5,12 +5,15 @@ import { Card, Icon } from 'react-native-elements';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { FontAwesome } from '@expo/vector-icons';
 import Carousel from 'react-native-new-snap-carousel';
-import styles from './Styles.js';
-import Ohje from './data'; //testii
-import TestData from './TestData.js';
+import styles from '../Styles.js';
+import Ohje from '../data'; //testii
+import TestData from '../TestData.js'; //TEST
+import ListVertical from '../components/ListVertical.js';
+import ButtonToSearch from '../components/ButtonToSearch.js';
+import ListHorizontal from '../components/ListHorizontal.js';
 
 // etusivu
-export default function Etusivu({ navigation }) {
+export default function HomeScreen({ navigation }) {
   const [text, setText] = useState(''); //testissä
   const [name, setName] = useState(''); //testissä
   const [quickList, setQuickList] = useState([]);
@@ -23,10 +26,6 @@ export default function Etusivu({ navigation }) {
   const itemWidth = screenWidth * 0.6;
 
   //const cardWidth = screenWidth * 0.4; jos 2 colums
-
-  const buttonPressed = () => {
-    Alert.alert(text);
-  };
 
   const listSeparator = () => {
     return (
@@ -143,7 +142,7 @@ export default function Etusivu({ navigation }) {
       accessibilityLabel="Tap the button"
       accessibilityHint="Navigates to recipe's details"
       onPress={() => 
-        navigation.navigate('Tiedot', {item})
+        navigation.navigate('DetailsScreen', {item})
         }
     >
       <Image source={{ uri: item.thumbnail_url}} style={{width:itemWidth, height:100, borderRadius: 8}} />
@@ -157,19 +156,10 @@ export default function Etusivu({ navigation }) {
 // korttilistaus vertikaalisesti, korttia napauttamalla pääsee reseptien tietoihin
   return (
     <SafeAreaProvider style={styles.container}>
-      <Pressable style={styles.searchBox}
-        accessible={true}
-        accessibilityRole="button"
-        accessibilityLabel="Tap"
-        accessibilityHint='Navigate to the search screen'
-        onPress={() => navigation.navigate('Haku')
+      <ButtonToSearch
+        onPress={() => navigation.navigate('SearchScreen')
         }
-      >
-        <FontAwesome name="search" size={25} color="black" style={styles.searchIcon} />
-        <TextInput style={styles.textInput}
-          placeholder={'Search recipe'}
-        />
-      </Pressable>
+      />
       <ScrollView style={styles.scrollView}
         accessible={true}
         accessibilityRole="grid"
@@ -183,33 +173,29 @@ export default function Etusivu({ navigation }) {
             accessible={true}
             accessibilityRole='text'>
             Quick Recipes</Text>
-          <Carousel
-            accessible={true}
-            accessibilityLabel="Carousel"
-            accessibilityHint="Scroll to the left to see recipies and back to the right"
-            accessibilityRole="adjustable"
-            showsHorizontalScrollIndicator={true}
-            Layout='default'
-            data={TestData}
-            renderItem={renderItem}
-            sliderWidth={sliderWidth}
-            itemWidth={itemWidth}
-          />
         </View>
         <View style={styles.flatlist}>
-          <FlatList
-            keyExtractor={(item, index) => index}
-            renderItem={({item}) =>
-            <Card title='Testidataa' style={styles.view}>
-              <Pressable  onPress={() => navigation.navigate('Tiedot', {item})}>
-                <Image source={{ uri: item.thumbnail_url}} style={styles.imageCook} />
-                <Text style={styles.name}>{item.name}</Text>
-              </Pressable>
-            </Card>
+          <ListHorizontal
+            onPress={(item) => navigation.navigate('DetailsScreen', {item})
+            }
+            data={Ohje}
+          />
+        </View>
+        <View style={styles.carousel}
+          accessible={true}>
+          <Text style={styles.name}
+            accessible={true}
+            accessibilityRole='text'>
+            Other Recipes</Text>
+        </View>
+        <View style={styles.flatlist}>
+          <ListHorizontal
+            onPress={(item) => navigation.navigate('DetailsScreen', {item})
             }
             data={TestData}
-            ItemSeparatorComponent={listSeparator} />
+          />
         </View>
+
 
 
         <View style={styles.carousel}
@@ -256,6 +242,11 @@ export default function Etusivu({ navigation }) {
             Take Your Time Recipes
           </Text>
           <View style={styles.flatlist}>
+          <ListVertical
+            onPress={(item) => navigation.navigate('DetailsScreen', {item})
+            }
+            data={TestData}
+          />
           <FlatList
             accessible={true}
             accessibilityRole='grid'
@@ -270,7 +261,7 @@ export default function Etusivu({ navigation }) {
                 accessibilityRole="imagebutton"
                 accessibilityLabel='Tap'
                 accessibilityHint='Navigate to recipe details'
-                onPress={() => navigation.navigate('Tiedot', {item})
+                onPress={() => navigation.navigate('DetailsScreen', {item})
                 }
               >
                 <Image source={{ uri: item.thumbnail_url}} style={{width:"100%", height:100}} />

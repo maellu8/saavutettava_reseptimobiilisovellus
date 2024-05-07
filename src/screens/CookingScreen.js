@@ -3,19 +3,21 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, FlatList, ScrollView, Image, Pressable } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Card } from 'react-native-elements';
-import styles from './Styles.js';
+import styles from '../Styles.js';
+import ListVertical from '../components/ListVertical.js';
 
-// Leivonta-listaus
-//TESTAAMATON BUILD
-export default function Leivonta({ navigation }) {
+// Ruokaisat ruoat listaus
+
+export default function CookingScreen({ navigation }) {
   const [text, setText] = useState(''); //testiversiossa
   const [name, setName] = useState(''); //testiversiossa
   const [list, setList] = useState([]);
 
-//Tagina desserts, antaa 20 tulosta
-
-  async function fetchDes() {
- /*   const url = 'https://tasty.p.rapidapi.com/recipes/list?from=0&size=20&tags=desserts';
+//Tagina dinner, antaa 20 tulosta
+// nimen vaihto??
+//  apin tauko käyttörajan ylitys
+  async function fetchData() {
+  /*  const url = 'https://tasty.p.rapidapi.com/recipes/list?from=0&size=20&tags=dinner';
     const options = {
       method: 'GET',
       headers: {
@@ -28,12 +30,12 @@ export default function Leivonta({ navigation }) {
       const response = await fetch(url, options);
       const result = await response.json();
       setList(result.results);
-      console.log("leivonta " + list);
+      console.log("ruokaisa " + list);
       /*testiversiossa:
       const res = result.results[13].name;
       const des = result.results[13].description;
-      console.log("Leivonta: " + res);
-      console.log("Leivonta: " + des);
+      console.log("Ruokaisa: " + res);
+      console.log("Ruokaisa: " + des);
       setName(res);
       setText(des);
       */
@@ -41,9 +43,9 @@ export default function Leivonta({ navigation }) {
       console.error(error);
     }
   }
-
+ 
    useEffect(() => {
-    fetchDes();
+    fetchData();
     console.log(list);
    }, []);
  
@@ -57,25 +59,31 @@ export default function Leivonta({ navigation }) {
       />
       );
     };
-//KS scrollView, onko 10 jees? itemContainer:marginTop: 10?
+  
+  //KS scrollView, onko 10 jees? itemContainer:marginTop: 10?
+
   return (
     <SafeAreaProvider style={styles.container}>
       <ScrollView style={styles.scrollView}>
-      <View style={styles.view}>
-        <FlatList
-           keyExtractor={(item, index) => index}
-           renderItem={({item}) =>
-           <Card title='Dinner' style={styles.itemContainer}>
-              <Pressable  onPress={() => navigation.navigate('Tiedot')}>
-                <Image source={{ uri: item.thumbnail_url}} style={{width:"100%", height:100}} />
-                <Text style={styles.name}>{item.name}</Text>
-              </Pressable>
-           </Card>
+        <ListVertical
+           onPress={() => navigation.navigate('DetailsScreen', {item})
            }
            data={list}
-           ItemSeparatorComponent={listSeparator}
         />
-      </View>
+        <View style={styles.view}>
+          <FlatList
+            keyExtractor={(item, index) => index}
+            renderItem={({item}) =>
+            <Card title='Dinner' style={styles.view}>
+              <Pressable  onPress={() => navigation.navigate('Tiedot')}>
+                <Image source={{ uri: item.thumbnail_url}} style={styles.imageCook} />
+                <Text style={styles.name}>{item.name}</Text>
+              </Pressable>
+            </Card>
+            }
+            data={list}
+            ItemSeparatorComponent={listSeparator} />
+        </View>
       </ScrollView>
     </SafeAreaProvider>
   );

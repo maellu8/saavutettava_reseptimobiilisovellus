@@ -3,10 +3,11 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, TextInput, Alert, ScrollView, Image, Dimensions, FlatList, Pressable } from 'react-native';
 import { Card } from 'react-native-elements';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { FontAwesome } from '@expo/vector-icons';
-import styles from './Styles.js';
+import Search from '../components/Search.js';
+import styles from '../Styles.js';
+import ListVertical from '../components/ListVertical.js';
 
-export default function Haku({ navigation }) {
+export default function SearchScreen({ navigation }) {
     const [hakusana, setHakusana] = useState('');
     const [list, setList] = useState([]);
 
@@ -21,7 +22,7 @@ async function getList() {
       method: 'GET',
       headers: {
         'X-RapidAPI-Key': process.env.API_TOKEN,
-        'X-RapidAPI-Host': process.env.API_URL2
+        'X-RapidAPI-Host': process.env.API_URL
       }
     };
 
@@ -49,24 +50,22 @@ async function getList() {
 
   return (
     <SafeAreaProvider style={styles.container}>
-         <View style={styles.searchBox} >
-          <FontAwesome name="search" size={25} color="black" style={styles.searchIcon} />
-           <TextInput style={styles.textInput}
-                placeholder='Search recipe'
-                keyboardType="default"
-                returnKeyType='search'
-                onChangeText={text => setHakusana(text)}
-                value={hakusana}
-           />
-         </View>
+        <Search
+            onChangeText={text => setHakusana(text)}
+        />
         <ScrollView style={styles.scrollView}>
             <View style={styles.view}>
+            <ListVertical
+                onPress={(item) => navigation.navigate('DetailsScreen', {item})
+                }
+                data={list}
+            />
             <FlatList
                 data={list}
                 keyExtractor={(item, index) => index}
                 renderItem={({item}) =>
                     <Card style={styles.view}>
-                        <Pressable  onPress={() => navigation.navigate('Tiedot', {item})}>
+                        <Pressable  onPress={() => navigation.navigate('DetailsScreen', {item})}>
                             <Image source={{ uri: item.thumbnail_url}} style={{width:"100%", height:100}} />
                             <Text style={styles.name}>{item.name}</Text>
                         </Pressable>

@@ -2,13 +2,13 @@ import React, { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, ScrollView, Image, FlatList, Item, Card, Pressable } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import styles from './Styles.js';
+import styles from '../Styles.js';
 import { ListItem } from 'react-native-elements';
-import TestData from './TestData';
+import TestData from '../TestData';
 
 // reseptin tiedot parametrinä
 
-export default function Tiedot({ navigation, route }) {
+export default function DetailsScreen({ navigation, route }) {
   const [item, setItem] = useState(route.params.item); // tiedot parametrinä
   const ainekset = item.sections[0].components; // ainesosat ja mitat
   const valmistusohje = item.instructions; // valmistuohje

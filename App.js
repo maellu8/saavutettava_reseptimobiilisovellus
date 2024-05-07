@@ -5,11 +5,12 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator, title } from '@react-navigation/bottom-tabs';
 import { Entypo, MaterialCommunityIcons } from '@expo/vector-icons';
 
-import Etusivu from './src/Etusivu';
-import Tiedot from './src/Tiedot';
-import Ruokaisa from './src/Ruokaisa';
-import Leivonta from './src/Leivonta';
-import Haku from './src/Haku';
+import HomeScreen from './src/screens/HomeScreen';
+import DetailsScreen from './src/screens/DetailsScreen';
+import CookingScreen from './src/screens/CookingScreen';
+import BakingScreen from './src/screens/BakingScreen';
+import SearchScreen from './src/screens/SearchScreen';
+import ListHorizontal from './src/components/ListHorizontal';
 
 // NAVIGAATIO
 // Yhdistetty Stack- ja Tab-navigaatio
@@ -37,8 +38,8 @@ export default function StackNavigation() {
             >
             {() => (
               <Stack.Navigator>
-               <Stack.Screen name="Etusivu"
-                component={Etusivu}
+               <Stack.Screen name="HomeScreen"
+                component={HomeScreen}
                 options={{
                   headerShown: true,
                   title: 'Recipe Book',
@@ -49,14 +50,14 @@ export default function StackNavigation() {
                 accessibilityLabel="This is header"
                 accessibilityRole="header"
                 />
-               <Stack.Screen name="Tiedot" component={Tiedot}
+               <Stack.Screen name="DetailsScreen" component={DetailsScreen}
                 options={{ title: 'Recipe Details', headerTitleAlign: 'center', headerStyle: {backgroundColor: '#c8dace'}  }}
                 accessible={true}
                 accessibilityRole="header"
                 headerBackAccessibilityLabel="Go back"
                 accessibilityHint="Navigates to home screen"
                />
-              <Stack.Screen name="Haku" component={Haku}
+              <Stack.Screen name="SearchScreen" component={SearchScreen}
                 options={{ title: 'Recipe Search', headerTitleAlign: 'center', headerStyle: {backgroundColor: '#c8dace'}  }}
                 accessible={true}
                 accessibilityRole="header"
@@ -66,7 +67,7 @@ export default function StackNavigation() {
              </Stack.Navigator>     
             )}
           </Tab.Screen>
-          <Tab.Screen name="Ruokaisa" component={Ruokaisa}
+          <Tab.Screen name="CookingScreen" component={CookingScreen}
             options={{ title: 'Cooking',
               tabBarIcon:({focused}) =>
               ( <MaterialCommunityIcons name="silverware-fork-knife" size={28} color={focused ? activeTintLabelColor : inactiveTintLabelColor} /> ), headerTitleAlign: 'center', headerStyle: {backgroundColor: '#c8dace'}  }}
@@ -75,7 +76,7 @@ export default function StackNavigation() {
             accessibilityHint="Navigate to review Cooking reciepes"
             accessibilityRole="button"
             />
-          <Tab.Screen name="Leivonta" component={Leivonta}
+          <Tab.Screen name="BakingScreen" component={BakingScreen}
             options={{ title: 'Baking',
               tabBarIcon:({focused}) =>
               ( <MaterialCommunityIcons name="cupcake" size={28} color={focused ? activeTintLabelColor : inactiveTintLabelColor} /> ), headerTitleAlign: 'center', headerStyle: {backgroundColor: '#c8dace'}  }}

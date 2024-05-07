@@ -3,20 +3,20 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, FlatList, ScrollView, Image, Pressable } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Card } from 'react-native-elements';
-import styles from './Styles.js';
+import styles from '../Styles.js';
+import ListVertical from '../components/ListVertical.js';
 
-// Ruokaisat ruoat listaus
-
-export default function Ruokaisa({ navigation }) {
+// Leivonta-listaus
+//TESTAAMATON BUILD
+export default function BakingScreen({ navigation }) {
   const [text, setText] = useState(''); //testiversiossa
   const [name, setName] = useState(''); //testiversiossa
   const [list, setList] = useState([]);
 
-//Tagina dinner, antaa 20 tulosta
-// nimen vaihto??
-//  apin tauko käyttörajan ylitys
-  async function fetchData() {
-  /*  const url = 'https://tasty.p.rapidapi.com/recipes/list?from=0&size=20&tags=dinner';
+//Tagina desserts, antaa 20 tulosta
+
+  async function fetchDes() {
+ /*   const url = 'https://tasty.p.rapidapi.com/recipes/list?from=0&size=20&tags=desserts';
     const options = {
       method: 'GET',
       headers: {
@@ -29,12 +29,12 @@ export default function Ruokaisa({ navigation }) {
       const response = await fetch(url, options);
       const result = await response.json();
       setList(result.results);
-      console.log("ruokaisa " + list);
+      console.log("leivonta " + list);
       /*testiversiossa:
       const res = result.results[13].name;
       const des = result.results[13].description;
-      console.log("Ruokaisa: " + res);
-      console.log("Ruokaisa: " + des);
+      console.log("Leivonta: " + res);
+      console.log("Leivonta: " + des);
       setName(res);
       setText(des);
       */
@@ -42,9 +42,9 @@ export default function Ruokaisa({ navigation }) {
       console.error(error);
     }
   }
- 
+
    useEffect(() => {
-    fetchData();
+    fetchDes();
     console.log(list);
    }, []);
  
@@ -58,26 +58,30 @@ export default function Ruokaisa({ navigation }) {
       />
       );
     };
-  
-  //KS scrollView, onko 10 jees? itemContainer:marginTop: 10?
-
+//KS scrollView, onko 10 jees? itemContainer:marginTop: 10?
   return (
     <SafeAreaProvider style={styles.container}>
       <ScrollView style={styles.scrollView}>
-        <View style={styles.view}>
-          <FlatList
-            keyExtractor={(item, index) => index}
-            renderItem={({item}) =>
-            <Card title='Dinner' style={styles.view}>
-              <Pressable  onPress={() => navigation.navigate('Tiedot')}>
-                <Image source={{ uri: item.thumbnail_url}} style={styles.imageCook} />
-                <Text style={styles.name}>{item.name}</Text>
-              </Pressable>
-            </Card>
+        <ListVertical
+            onPress={(item) => navigation.navigate('DetailsScreen', {item})
             }
             data={list}
-            ItemSeparatorComponent={listSeparator} />
-        </View>
+        />
+      <View style={styles.view}>
+        <FlatList
+           keyExtractor={(item, index) => index}
+           renderItem={({item}) =>
+           <Card title='Dinner' style={styles.itemContainer}>
+              <Pressable  onPress={() => navigation.navigate('DetailsScreen')}>
+                <Image source={{ uri: item.thumbnail_url}} style={{width:"100%", height:100}} />
+                <Text style={styles.name}>{item.name}</Text>
+              </Pressable>
+           </Card>
+           }
+           data={list}
+           ItemSeparatorComponent={listSeparator}
+        />
+      </View>
       </ScrollView>
     </SafeAreaProvider>
   );
