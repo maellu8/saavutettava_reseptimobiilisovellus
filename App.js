@@ -1,20 +1,19 @@
-//import 'react-native-gesture-handler';
 import * as React from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator, title } from '@react-navigation/bottom-tabs';
 import { Entypo, MaterialCommunityIcons } from '@expo/vector-icons';
-import { Image } from 'react-native-elements';
 
 import Etusivu from './src/Etusivu';
 import Tiedot from './src/Tiedot';
 import Ruokaisa from './src/Ruokaisa';
 import Leivonta from './src/Leivonta';
 import Haku from './src/Haku';
-//import cupcakeFlower from './images';
 
+// NAVIGAATIO
 // Yhdistetty Stack- ja Tab-navigaatio
+// Accessible-ominaisuudet lisätty
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();

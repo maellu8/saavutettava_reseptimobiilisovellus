@@ -3,6 +3,7 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, FlatList, ScrollView, Image, Pressable } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Card } from 'react-native-elements';
+import styles from './Styles.js';
 
 // Leivonta-listaus
 //TESTAAMATON BUILD
@@ -14,14 +15,14 @@ export default function Leivonta({ navigation }) {
 //Tagina desserts, antaa 20 tulosta
 
   async function fetchDes() {
-    const url = 'https://tasty.p.rapidapi.com/recipes/list?from=0&size=20&tags=desserts';
+ /*   const url = 'https://tasty.p.rapidapi.com/recipes/list?from=0&size=20&tags=desserts';
     const options = {
       method: 'GET',
       headers: {
         'X-RapidAPI-Key': process.env.API_TOKEN,
         'X-RapidAPI-Host': process.env.API_URL
       }
-    };
+    }; */
 
     try {
       const response = await fetch(url, options);
@@ -56,7 +57,7 @@ export default function Leivonta({ navigation }) {
       />
       );
     };
-
+//KS scrollView, onko 10 jees? itemContainer:marginTop: 10?
   return (
     <SafeAreaProvider style={styles.container}>
       <ScrollView style={styles.scrollView}>
@@ -79,43 +80,3 @@ export default function Leivonta({ navigation }) {
     </SafeAreaProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#dfe9e2',
-  },
-  scrollView: {
-    marginHorizontal: 20,
-    marginBottom: 20,
-    marginTop:10,
-  },
-  view: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#dfe9e2',
-  },
-  text: {
-    fontSize: 16,
-    marginBottom: 10,
-  },
-  name: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    paddingHorizontal: 8,
-    marginBottom: 3,
-    marginTop:5,
-  },
-  itemContainer: {
-    marginTop: 20,
-    backgroundColor: '#7a82e5',
-    borderRadius: 10,
-    padding: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: 150,
-  },
-});

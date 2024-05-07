@@ -5,7 +5,9 @@ import { Card, Icon } from 'react-native-elements';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { FontAwesome } from '@expo/vector-icons';
 import Carousel from 'react-native-new-snap-carousel';
+import styles from './Styles.js';
 import Ohje from './data'; //testii
+import TestData from './TestData.js';
 
 // etusivu
 export default function Etusivu({ navigation }) {
@@ -19,6 +21,8 @@ export default function Etusivu({ navigation }) {
   const { width:screenWidth } = Dimensions.get('window');
   const sliderWidth = screenWidth;
   const itemWidth = screenWidth * 0.6;
+
+  //const cardWidth = screenWidth * 0.4; jos 2 colums
 
   const buttonPressed = () => {
     Alert.alert(text);
@@ -37,14 +41,14 @@ export default function Etusivu({ navigation }) {
 
 // listaa reseptit, joiden valmistusaika on alle 30 min
  async function quick() {
-    const url = 'https://tasty.p.rapidapi.com/recipes/list?from=0&size=20&tags=under_30_minutes';
+ /*   const url = 'https://tasty.p.rapidapi.com/recipes/list?from=0&size=20&tags=under_30_minutes';
     const options = {
       method: 'GET',
       headers: {
         'X-RapidAPI-Key': process.env.API_TOKEN,
         'X-RapidAPI-Host': process.env.API_URL
       }
-    };
+    }; */
 
     try {
       const response = await fetch(url, options);
@@ -64,14 +68,14 @@ export default function Etusivu({ navigation }) {
 
   // listaa kevätkauden reseptit
   async function spring() {
-    const url = 'https://tasty.p.rapidapi.com/recipes/list?from=0&size=20&tags=spring';
+  /*  const url = 'https://tasty.p.rapidapi.com/recipes/list?from=0&size=20&tags=spring';
     const options = {
       method: 'GET',
       headers: {
         'X-RapidAPI-Key': process.env.API_TOKEN,
         'X-RapidAPI-Host': process.env.API_URL
       }
-    };
+    }; */
 
     try {
       const response = await fetch(url, options);
@@ -91,14 +95,14 @@ export default function Etusivu({ navigation }) {
 
 // listaa reseptit, joiden valmistusaika on alle 1 tunti
   async function difficult() {
-    const url = 'https://tasty.p.rapidapi.com/recipes/list?from=0&size=20&tags=under_1_hour';
+  /*  const url = 'https://tasty.p.rapidapi.com/recipes/list?from=0&size=20&tags=under_1_hour';
     const options = {
       method: 'GET',
       headers: {
         'X-RapidAPI-Key': process.env.API_TOKEN,
         'X-RapidAPI-Host': process.env.API_URL
       }
-    };
+    }; */
 
     try {
       const response = await fetch(url, options);
@@ -146,7 +150,8 @@ export default function Etusivu({ navigation }) {
       <Text style={styles.name} accessibilityRole="text">{item.name}</Text>
     </Pressable>
    )
-
+//KOelistaan lisätty vertical ja numCol..... TOIMII, vaatii säätöä: vertical showsVerticalScrollIndicator={false} numColumns={2}
+   //POISTA TESTIELEMENTIT
 // haku on vain painike, vie hakusivun toiminnallisuuteen. Haku on stabiili
 // reseptikaruselli x2, korttia napauttamalla pääsee reseptien tietoihin
 // korttilistaus vertikaalisesti, korttia napauttamalla pääsee reseptien tietoihin
@@ -156,8 +161,8 @@ export default function Etusivu({ navigation }) {
         accessible={true}
         accessibilityRole="button"
         accessibilityLabel="Tap"
-        accessibilityHint='Navigate to search screen'
-        onPress={() => navigation.navigate('Ohje')
+        accessibilityHint='Navigate to the search screen'
+        onPress={() => navigation.navigate('Haku')
         }
       >
         <FontAwesome name="search" size={25} color="black" style={styles.searchIcon} />
@@ -171,6 +176,42 @@ export default function Etusivu({ navigation }) {
         accessibilityLabel='Scroll vertical'
         accessibilityHint='Scroll the view to the top reviewing whole content'
       >
+
+<View style={styles.carousel}
+          accessible={true}>
+          <Text style={styles.name}
+            accessible={true}
+            accessibilityRole='text'>
+            Quick Recipes</Text>
+          <Carousel
+            accessible={true}
+            accessibilityLabel="Carousel"
+            accessibilityHint="Scroll to the left to see recipies and back to the right"
+            accessibilityRole="adjustable"
+            showsHorizontalScrollIndicator={true}
+            Layout='default'
+            data={TestData}
+            renderItem={renderItem}
+            sliderWidth={sliderWidth}
+            itemWidth={itemWidth}
+          />
+        </View>
+        <View style={styles.flatlist}>
+          <FlatList
+            keyExtractor={(item, index) => index}
+            renderItem={({item}) =>
+            <Card title='Testidataa' style={styles.view}>
+              <Pressable  onPress={() => navigation.navigate('Tiedot', {item})}>
+                <Image source={{ uri: item.thumbnail_url}} style={styles.imageCook} />
+                <Text style={styles.name}>{item.name}</Text>
+              </Pressable>
+            </Card>
+            }
+            data={TestData}
+            ItemSeparatorComponent={listSeparator} />
+        </View>
+
+
         <View style={styles.carousel}
           accessible={true}>
           <Text style={styles.name}
@@ -246,88 +287,3 @@ export default function Etusivu({ navigation }) {
     </SafeAreaProvider>
   );
 };
-
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#dfe9e2',
-  },
-  searchBox: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#fff',
-    borderWidth: 0.5,
-    borderColor: '#000',
-    height: 45,
-    borderRadius: 5,
-    margin: 10,
-    width: '80%',
-  },
-  textInput: {
-    flex: 1,
-    fontSize: 18,
-  },
-  searchIcon: {
-    margin: 5,
-    marginLeft: 10,
-    marginRight: 20,
-    height: 25,
-    width: 25,
-    alignItems: 'center',
-  },
-  scrollView: {
-    marginHorizontal: 10,
-    marginBottom: 20,
-    marginTop:10,
-  },
-  view: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#dfe9e2',
-  },
-  text: {
-    fontSize: 16,
-    marginBottom: 10,
-  },
-  name: {
-    fontSize: 15,
-    fontWeight: 'bold',
-    paddingHorizontal: 8,
-    marginBottom: 3,
-    marginTop:5,
-  },
-  itemContainer: {
-    marginTop: 10,
-    backgroundColor: 'white',
-    borderRadius: 8,
-    borderColor: '#000', // eit oimi
-    padding: 10, // ei nähtävästi vaikuta
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: 150,
-  },
-  card: {
-    marginTop: 10,
-    marginLeft: 20,
-    backgroundColor: 'white',
-    borderRadius: 8,
-    borderColor: '#000', // eit oimi
-    padding: 10, // ei nähtävästi vaikuta
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: 100,
-    width:'80%',
-  },
-  flatlist: {
-    marginBottom:40,
-    marginRight:20,
-  },
-  carousel: {
-    marginTop: 15,
-  },
-});
