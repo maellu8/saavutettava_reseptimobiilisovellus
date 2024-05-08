@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, TextInput, Alert, ScrollView, Image, Dimensions, FlatList, Pressable } from 'react-native';
+import { Text, View, ScrollView, Image, Dimensions, FlatList, Pressable } from 'react-native';
 import { Card, Icon } from 'react-native-elements';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { FontAwesome } from '@expo/vector-icons';
 import Carousel from 'react-native-new-snap-carousel';
 import styles from '../Styles.js';
 import Ohje from '../data'; //testii
