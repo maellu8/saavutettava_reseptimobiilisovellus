@@ -1,10 +1,7 @@
 import React, { useState } from 'react';
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, ScrollView, Image, FlatList, Item, Card, Pressable } from 'react-native';
+import { Text, View, ScrollView, Image, FlatList } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import styles from '../Styles.js';
-import { ListItem } from 'react-native-elements';
-import TestData from '../TestData';
 
 // reseptin tiedot parametrinä
 

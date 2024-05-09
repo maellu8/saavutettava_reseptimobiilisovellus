@@ -2,15 +2,17 @@ import React from 'react';
 import Carousel from 'react-native-new-snap-carousel';
 import { Dimensions, Pressable, Image, Text } from 'react-native';
 import styles from '../Styles.js';
-import TestData from '../TestData.js'; //TEST
 
-//Vaihda dataan quickList
+// Horisontaalinen lista, joka ottaa datan arvon kutsuvan näytön komponentista
+
 export default function ListHorizontal({onPress, data}) {
-      // karusellin kokomääritykset
+
+// karusellin kokomääritykset
   const { width:screenWidth } = Dimensions.get('window');
   const sliderWidth = screenWidth;
   const itemWidth = screenWidth * 0.6;
-      // rendelöi karusellin sisällön, kuva ja teksti on painike
+
+// rendelöi karusellin sisällön, kuva ja teksti on painike
    const renderItem = ({item}) => (
     <Pressable style={styles.itemContainer}
       accessible={true}

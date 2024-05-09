@@ -10,7 +10,6 @@ import DetailsScreen from './src/screens/DetailsScreen';
 import CookingScreen from './src/screens/CookingScreen';
 import BakingScreen from './src/screens/BakingScreen';
 import SearchScreen from './src/screens/SearchScreen';
-import ListHorizontal from './src/components/ListHorizontal';
 
 // NAVIGAATIO
 // Yhdistetty Stack- ja Tab-navigaatio
@@ -26,9 +25,8 @@ export default function StackNavigation() {
   return (
     <SafeAreaProvider>
       <NavigationContainer>
-        <Tab.Navigator tabBarOptions={{ activeTintColor: "#a4d7af",
-          labelStyle: { fontSize: 15, fontWeight: "bold", }}}>
-          <Tab.Screen name="Koti"
+        <Tab.Navigator tabBarOptions={{ activeTintColor: "#a4d7af", labelStyle: { fontSize: 15, fontWeight: "bold", }}}>
+          <Tab.Screen name="HomeScreen"
             options={{ headerShown: false, title: 'Home',
               tabBarIcon:({focused}) => ( <Entypo name="home" size={28} color={focused ? activeTintLabelColor : inactiveTintLabelColor} /> ) }}
             accessible={true}

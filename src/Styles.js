@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
       alignItems: 'center',
     },
     scrollView: {
-      marginHorizontal: 10, // leivonta: 20, tiedot 15, ruokaisa 20
+      marginHorizontal: 10,
       marginBottom: 20,
       marginTop:10,
     },
@@ -42,33 +42,35 @@ const styles = StyleSheet.create({
       justifyContent: 'center',
       backgroundColor: '#dfe9e2',
     },
+    homeFlatlist: {
+      width: '90%',
+    },
     text: {
       fontSize: 16,
       marginBottom: 10,
     },
     name: {
-      fontSize: 17, // leivonta 18, tiedot 18, haku 18, ruokaisa 18
+      fontSize: 17,
       fontWeight: 'bold',
       paddingHorizontal: 8,
       marginBottom: 3,
       marginTop:5,
-    }, // tiedot:
+    }, //DetailsScreen:
     detailsContainer: {
       flex:1,
       margin: 10,
-    }, //tiedot:
+    }, //DetailsScreen:
     title: {
       fontSize: 18,
       fontWeight: 'bold',
       marginBottom: 10,
       marginTop:5,
-    }, //tiedot:
+    }, //DetailsScreen:
     list: {
         fontSize: 16,
         marginLeft: 20,
         marginTop: 10,
     },
-   // ruokaisa:
       imageCook: {
       width:"100%",
       height:100,
@@ -76,26 +78,14 @@ const styles = StyleSheet.create({
       padding:0,
     },
     itemContainer: {
-      marginTop: 10, // leivonta 20, ruokaisa 20
-      backgroundColor: 'white', // leivonta ja ruokaisa '#7a82e5'
-      borderRadius: 8, // leivonta ja ruokaisa 10
-      borderColor: '#000', // eit oimi
-      padding: 10, // ei nähtävästi vaikuta; leivonta 20, ruokaisa 20
+      marginTop: 10,
+      backgroundColor: 'white',
+      borderRadius: 8,
+      borderColor: '#000',
+      padding: 10,
       alignItems: 'center',
       justifyContent: 'center',
       height: 150,
-    }, //ei käytössä
-    card: {
-      marginTop: 10,
-      marginLeft: 20,
-      backgroundColor: 'white',
-      borderRadius: 8,
-      borderColor: '#000', // eit oimi
-      padding: 10, // ei nähtävästi vaikuta
-      alignItems: 'center',
-      justifyContent: 'center',
-      height: 100,
-      width:'80%',
     },
     flatlist: {
       marginBottom:40,

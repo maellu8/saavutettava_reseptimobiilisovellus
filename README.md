@@ -1,5 +1,5 @@
 ### Projekti
-Reseptimobiilissovellus on toiminnallinen osa Saavutettava reseptimobiilisovellus -opinnäytetyötä. Sen tarkoituksena oli tutustua saavutettavuuteen ja ruudunlukijan toimintaan käyttäen React Native -viitekehystä android-alustalla. Sovellus käyttää Tasty API -rajapintaa.
+saavutettava_reseptimobiilisovellus on toiminnallinen osa Saavutettava reseptimobiilisovellus -opinnäytetyötä. Sen tarkoituksena oli tutustua saavutettavuuteen ja ruudunlukijan toimintaan käyttäen React Native -viitekehystä Android-alustalla. Sovellus käyttää Tasty API -rajapintaa.
 
 ### Tekniikat
 - React Native
